@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${web_title}"></title>
+    <meta name="keywords" th:content="${web_key}">
+    <meta name="description" th:content="${web_key}">
+
+    <link href="/html/css/base.css" rel="stylesheet">
+    <link href="/html/css/index.css" rel="stylesheet">
+    <link href="/html/css/media.css" rel="stylesheet">
+    <link href="/html/css/swiper.min.css" rel="stylesheet" >
+    <link href="/layui/css/layui.css" rel="stylesheet" >
+</head>
+<body>
+<div th:replace="html/header :: header"></div>
+
+<article>
+    <div class="l_box f_l">
+
+        <div class="topnews">
+            <h2 th:each="menu,status:${menuList}" th:href="'/article/list/'+ ${menu.dic_code} +'.html'" th:if="${menu.dic_code} == ${article_type}"><b th:text="${menu.dic_name}"></b></h2>
+
+            <div class="blogs" th:each="article,status:${pager.list}">
+                <figure><img th:src="${article.article_img}"></figure>
+                <ul>
+                    <h3><a th:href="'/article/detail/' + ${article.article_id} + '.html'" target="_blank" th:title="${article.article_title}" th:text="${article.article_title}"></a></h3>
+                    <p th:text="${article.article_desc}"></p>
+                    <p class="autor">
+                        <span class="lm f_l">[<a th:each="menu,status:${menuList}" th:href="'/article/list/'+ ${menu.dic_code} +'.html'" th:text="${menu.dic_name}" th:if="${menu.dic_code} == ${article.article_type}"></a>]</span>
+                        <span class="dtime f_l" th:text="${#dates.format(article.article_time,'yyyy-MM-dd HH:mm:ss')}"></span>
+                        <span class="viewnum f_r"> 浏览（<a th:href="'/article/detail/' + ${article.article_id} + '.html'" th:text="${article.article_cnt}"></a>）</span>
+                    </p>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 右侧 -->
+    <div class="r_box f_r">
+        <div th:include="html/right :: right"></div>
+    </div>
+
+
+
+</article>
+
+
+<div th:replace="html/footer :: footer"></div>
+
+
+
+
+<script type="text/javascript" src="/html/js/silder.js"></script>
+<script type="text/javascript" src="/html/js/jquery.js"></script>
+<script type="text/javascript" src="/layui/layui.js"></script>
+<script>
+
+</script>
+</body>
+</html>

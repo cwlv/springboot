@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>权限管理</title>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+</head>
+<body>
+    <div class="x-body">
+
+        <table id="auth-table" class="layui-table" lay-filter="auth-table"></table>
+
+    </div>
+
+
+    <script type="text/html" id="auth-state">
+        <a lay-event="add" title="新增"><i class="layui-icon">&#xe654;</i></a>
+        <a lay-event="edit" title="编辑"><i class="layui-icon">&#xe642;</i></a>
+        <a lay-event="del" title="删除"><i class="layui-icon">&#xe640;</i></a>
+    </script>
+
+    <script type="text/javascript" src="/layui/layui.js" charset="utf-8"></script>
+    <script>
+
+        layui.config({
+            base: '/layui/'
+        }).extend({
+            treetable: 'lay/modules/treetable'
+        }).use(['table', 'treetable'], function () {
+            var $ = layui.jquery;
+            var table = layui.table;
+            var treetable = layui.treetable;
+
+            layer.load(2);
+            treetable.render({
+                treeColIndex: 1
+                ,treeSpid: -1
+                ,treeIdName: 'menu_id'
+                ,treePidName: 'p_id'
+                ,elem: '#auth-table'
+                ,url: '/admin/menu/treeTable'
+                ,page: false
+                ,cols: [
+                    [
+                        {type: 'numbers',title:'序号'}
+                        ,{field: 'menu_name', width: 300, title: '权限名称'}
+                        ,{field: 'perms', title: '权限标识',width: 240}
+                        ,{field: 'icon', title: '权限图标',width: 120,align: 'center',temple:function(icon){
+                            return '<i class="layui-icon">"+ icon.icon + "</i>';
+                        }}
+                        ,{field: 'menu_url', title: '访问URl',width: 300}
+                        ,{field: 'menu_order', width: 80, align: 'center', title: '排序号'}
+                        ,{field: 'menu_type',  title: '类型',width: 80, align: 'center', templet: function (d) {
+                            if (d.menu_type == '10') {
+                                return '<span class="layui-badge layui-bg-gray">目录</span>';
+                            }else if (d.menu_type == '20') {
+                                return '<span class="layui-badge layui-bg-blue">菜单</span>';
+                            } else {
+                                return '<span class="layui-badge-rim">按钮</span>';
+                            }
+                        }}
+                        ,{templet: '#auth-state', width: 120, align: 'center', title: '操作'}
+                    ]
+                ]
+                ,done: function () {
+                    layer.closeAll('loading');
+                }
+            });
+
+
+        });
+
+    </script>
+</body>
+</html>

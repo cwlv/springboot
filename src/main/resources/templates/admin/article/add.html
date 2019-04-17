@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增用户</title>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+</head>
+
+<body>
+<div class="x-body">
+    <form class="layui-form"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题：</label>
+            <div class="layui-input-block">
+                <input type="text" name="article_title" placeholder="请输入" lay-verify="required|article_title" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+                <select name="article_type" id="article_type" class="layui-input"></select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">作者</label>
+            <div class="layui-input-block">
+                <input type="text" name="article_author" placeholder="请输入" lay-verify="article_author" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">来源</label>
+            <div class="layui-input-block">
+                <input type="text" name="article_from" placeholder="请输入" lay-verify="article_from" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">发布时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="article_time" class="layui-input" id="article_time" placeholder="yyyy-MM-dd HH:mm:ss">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片：</label>
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id="imgBtn">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+                <input type="hidden" name="article_img" class="layui-input" id="article_img"/>
+                <span>点击预览</span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">概要</label>
+            <div class="layui-input-block">
+                <textarea name="article_desc" placeholder="请输入内容" lay-verify="article_desc" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea name="article_text" placeholder="请输入内容" lay-verify="article_text" class="layui-textarea" id="article_text"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="/layui/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['upload','layedit','form','laydate'], function(){
+        var upload = layui.upload
+            ,layedit = layui.layedit
+            ,form = layui.form
+            ,laydate = layui.laydate
+            ,$ = layui.jquery;
+
+        //时间选择器
+        laydate.render({
+            elem: '#article_time'
+            ,type: 'datetime'
+        });
+
+        //下拉框赋值----类型
+        $.post("/admin/dic/list",{},function(rst){
+            $.each(rst.data,function(index,item){
+                //option  第一个参数是页面显示的值，第二个参数是传递到后台的值
+                $('#article_type').append(new Option(item.dic_name,item.dic_code));   //往下拉菜单里添加元素
+                //设置value（这个值就可以是在更新的时候后台传递到前台的值）为2的值为默认选中
+                // $('#selectId').val(2);
+            })
+            //form.render(); //更新全部表单内容
+            form.render('select'); //刷新表单select选择框渲染
+        });
+
+        //图片上传
+        upload.render({
+            elem: '#imgBtn'         //绑定元素
+            ,url: '/fileUpload'     //上传接口
+            ,done: function(res){
+                //上传完毕回调
+                console.log(res.data.src);
+                $("#article_img").val(res.data.src);
+            }
+            ,error: function(){
+                //请求异常回调
+                console.log("文件上传失败")
+            }
+        });
+
+        //富文本
+        layedit.set({
+            uploadImage:{
+                url:'/fileUpload'
+                ,type:'post'
+            }
+        });
+        var edit_index = layedit.build('article_text'); //建立编辑器
+        //自定义验证规则
+        form.verify({
+            article_text: function(){
+                return layedit.sync(edit_index);
+            }
+        });
+
+        //表单提交
+        form.on('submit(add)', function(data){
+            $.ajax({
+                url:"/admin/article/save",              //请求地址
+                type:'post',                         //method请求方式，get或者post
+                data:JSON.stringify(data.field),     //表格数据序列化
+                contentType: "application/json; charset=utf-8",
+                success:function(jsonResult){          //res为相应体,function为回调函数
+                    if(jsonResult.code == '200'){
+                        layer.alert(jsonResult.msg, {icon: 6},function () {
+                            //关闭弹出层，并且刷新父页面
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            parent.location.reload();
+                         });
+                    }else{
+                        layer.alert(jsonResult.msg, {icon: 5});
+                    }
+                },
+                error:function(){
+                    layer.alert('操作失败！！！',{icon:5});
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+
+</script>
+</body>
+
+</body>
+</html>

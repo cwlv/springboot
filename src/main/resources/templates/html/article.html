@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${web_title}"></title>
+    <meta name="keywords" th:content="${web_key}">
+    <meta name="description" th:content="${web_key}">
+
+    <link href="/html/css/base.css" rel="stylesheet">
+    <link href="/html/css/view.css" rel="stylesheet">
+    <link href="/html/css/media.css" rel="stylesheet">
+    <link href="/html/css/swiper.min.css" rel="stylesheet" >
+    <link href="/layui/css/layui.css" rel="stylesheet" >
+</head>
+<body>
+<div th:replace="html/header :: header"></div>
+<article>
+    <div class="l_box f_l">
+        <div class="topnews">
+            <h2>您现在的位置：<a href="/">首页</a>&nbsp;&gt;&nbsp;
+                <a th:each="menu,status:${menuList}" th:href="'/article/list/'+ ${menu.dic_code} +'.html'" th:if="${menu.dic_code} == ${article.article_type}" th:text="${menu.dic_name}"></a>
+            </h2>
+            <div class="news_title" th:text="${article.article_title}"></div>
+            <div class="news_author">
+                <span class="au01" th:text="${article.article_author}"></span>
+                <span class="au02" th:text="${#dates.format(article.article_time,'yyyy-MM-dd HH:mm')}"></span>
+                <span class="au03"><b th:text="${article.article_cnt}"></b>人围观</span>
+            </div>
+            <div class="tags"></div>
+            <div class="news_about">
+                <strong>简介</strong>
+                <p th:text="${article.article_desc}"></p>
+            </div>
+            <div class="news_content">
+                <ul th:utext="${article.article_text}">
+
+                </ul>
+            </div>
+            <div class="nextinfo">
+                <p>上一篇：<a href="http://jiyouh.yangqq.com/jiaocheng/6.html">阿里云如何申请配置ssl证书</a></p>
+                <p>下一篇：<a href="http://jiyouh.yangqq.com/jiaocheng/">返回列表</a></p>
+            </div>
+            <div class="otherlink">
+                <h2>相关文章</h2>
+                <ul>
+                    <li><a href="http://jiyouh.yangqq.com/jiaocheng/7.html" title="【排名技术建站】杨青助你快速实现主站为核心的搜索排名霸屏">【排名技术建站】杨青助你快速实现主站为核心的搜索排名霸屏</a></li>
+                    <li><a href="http://jiyouh.yangqq.com/jiaocheng/6.html" title="阿里云如何申请配置ssl证书">阿里云如何申请配置ssl证书</a></li>
+                    <li><a href="http://jiyouh.yangqq.com/jiaocheng/5.html" title="如何快速建立自己的个人博客网站">如何快速建立自己的个人博客网站</a></li>
+                    <li><a href="http://jiyouh.yangqq.com/jiaocheng/4.html" title="我的个人博客之——阿里云空间选择">我的个人博客之——阿里云空间选择</a></li>
+                    <li><a href="http://jiyouh.yangqq.com/jiaocheng/3.html" title="做网站到底需要什么?">做网站到底需要什么?</a></li>
+                    <li><a href="http://jiyouh.yangqq.com/jiaocheng/2.html" title="企业做网站具体流程步骤">企业做网站具体流程步骤</a></li>
+                    <li><a href="http://jiyouh.yangqq.com/jiaocheng/1.html" title="建站流程篇——教你如何快速学会做网站">建站流程篇——教你如何快速学会做网站</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧 -->
+    <div class="r_box f_r">
+        <div th:include="html/right :: right"></div>
+    </div>
+
+</article>
+
+
+
+
+<div th:replace="html/footer :: footer"></div>
+
+</body>
+</html>

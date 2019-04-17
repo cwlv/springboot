@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springboot.mapper.PermissionMapper">
+
+    <!-- 用户-角色-权限 持久层sql配置 -->
+
+    <!--添加用户-角色 -->
+    <insert id="addUserRole" parameterType="com.springboot.entity.PermissionEntity">
+      insert into sys_user_role(
+        user_id,role_id
+      )values(
+        #{user_id},#{role_id}
+      )
+    </insert>
+
+    <!-- 批量添加用户-角色 -->
+    <insert id="addUserRoleBatch" parameterType="List">
+        insert into sys_user_role(user_id,role_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+        (#{item.user_id}, #{item.role_id})
+        </foreach>
+    </insert>
+
+
+    <!--添加角色-权限 -->
+    <insert id="addRoleMenu" parameterType="com.springboot.entity.PermissionEntity">
+      insert into sys_role_menu(
+        role_id,menu_id
+      )values(
+        #{role_id},#{menu_id}
+      )
+    </insert>
+
+    <!-- 批量角色-权限 -->
+    <insert id="addRoleMenuBatch" parameterType="List">
+        insert into sys_role_menu(role_id,menu_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.role_id}, #{item.menu_id})
+        </foreach>
+    </insert>
+
+
+    <!--删除用户-角色 -->
+    <delete id="deleteUserRole" parameterType="long">
+        delete from sys_user_role where user_id = #{user_id}
+    </delete>
+
+    <!--删除角色-权限 -->
+    <delete id="deleteRoleMenu" parameterType="long">
+        delete from sys_role_menu where role_id = #{role_id}
+    </delete>
+
+    <!-- 查询用户-权限列表  -->
+    <select id="listPermission" parameterType="long" resultType="com.springboot.entity.PermissionEntity">
+        select distinct ur.user_id,rm.role_id,r.role_type,m.*
+        from sys_menu m,sys_role_menu rm,sys_user_role ur,sys_role r
+        where m.menu_id = rm.menu_id
+        and rm.role_id = ur.role_id
+		and rm.role_id = r.role_id
+        and ur.user_id = #{user_id}
+    </select>
+
+
+    <select id="childPermission" parameterType="long" resultType="com.springboot.entity.PermissionEntity">
+        select * from sys_menu
+        where p_id = #{p_id}
+    </select>
+
+</mapper>

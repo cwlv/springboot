@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑字典</title>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+</head>
+
+<body>
+<div class="x-body">
+    <form class="layui-form"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+        <input type="hidden" name="user_id" class="layui-input" id="user_id"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="user_name" placeholder="请输入" lay-verify="required|user_name" autocomplete="off" class="layui-input" readonly="readonly" id="user_name">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="user_nick" placeholder="请输入" lay-verify="required|user_nick" autocomplete="off" class="layui-input" id="user_nick">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="save">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="/layui/layui.js" charset="utf-8"></script>
+<script>
+
+    layui.use('form', function(){
+        var form = layui.form
+            ,$ = layui.jquery;
+
+        $(function () {
+            //从父层获取值，json是父层的全局js变量。eval是将该string类型的json串变为标准的json串
+            var parent_json = eval('('+parent.rowJson+')');
+            //给子页面赋值
+            $("#user_id").val(parent_json.user_id);
+            $("#user_name").val(parent_json.user_name);
+            $("#user_nick").val(parent_json.user_nick);
+        });
+
+        //自定义验证规则
+        form.verify({
+            user_nick: function(value){
+                if(value.length < 5){
+                    return '昵称至少得5个字符啊';
+                }
+            }
+        });
+
+        //表单提交
+        form.on('submit(save)', function(data){
+            $.ajax({
+                url:"/admin/user/update",               //请求地址
+                type:'post',                            //method请求方式，get或者post
+                data:JSON.stringify(data.field),        //表格数据序列化
+                contentType: "application/json; charset=utf-8",
+                success:function(jsonResult){          //res为相应体,function为回调函数
+                    if(jsonResult.code == '200'){
+                        layer.alert(jsonResult.msg, {icon: 6},function () {
+                            //关闭弹出层，并且刷新父页面
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            parent.location.reload();
+                        });
+                    }else{
+                        layer.alert(jsonResult.msg, {icon: 5});
+                    }
+                },
+                error:function(){
+                    layer.alert('操作失败！！！',{icon:5});
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+</body>
+
+</body>
+</html>

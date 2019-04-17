@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springboot.mapper.MenuMapper">
+
+    <!-- 菜单管理 持久层sql配置 -->
+
+    <!--新增用户 -->
+    <insert id="addMenu" parameterType="com.springboot.entity.MenuEntity">
+      insert into sys_menu(
+
+      )values(
+
+      )
+    </insert>
+
+    <!--查询用户列表 分页 -->
+    <select id="listMenu" parameterType="HashMap" resultType="com.springboot.entity.MenuEntity">
+        select * from sys_menu
+    </select>
+
+    <!--统计用户数量 -->
+    <select id="countMenu" parameterType="HashMap" resultType="int">
+        select count(1) from sys_menu
+    </select>
+
+    <!--更新用户信息 -->
+    <update id="updateMenu" parameterType="com.springboot.entity.MenuEntity">
+        update sys_menu set
+          menu_url = #{menu_url}
+        where menu_id = #{menu_id}
+    </update>
+
+    <!--删除用户信息 -->
+    <delete id="deleteMenu" parameterType="long">
+        delete from sys_menu where menu_id = #{menu_id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springboot.mapper.ConfigMapper">
+
+    <!-- Config 管理 持久层sql配置 -->
+
+    <!--新增 -->
+    <insert id="addConfig" parameterType="com.springboot.entity.ConfigEntity">
+      insert into sys_config(
+        config_name,config_key,config_value,remark
+      )values(
+        #{config_name},#{config_key},#{config_value},#{remark}
+      )
+    </insert>
+
+    <!--查询列表 分页 -->
+    <select id="listConfig" parameterType="HashMap" resultType="com.springboot.entity.ConfigEntity">
+        select * from sys_config
+        where 1 = 1
+        <if test="config_name != null and config_name != '' ">
+            and config_name like concat('%',#{config_name},'%')
+        </if>
+        <if test="config_key != null and config_key != '' ">
+            and config_key = #{config_key}
+        </if>
+        <if test="config_value != null and config_value != '' ">
+            and config_value = #{config_value}
+        </if>
+        order by config_id desc
+    </select>
+
+    <!-- 获取信息 -->
+    <select id="getConfig" resultType="com.springboot.entity.ConfigEntity">
+        select * from sys_config where config_key = #{config_key}
+    </select>
+
+
+    <!--更新信息 -->
+    <update id="updateConfig" parameterType="com.springboot.entity.ConfigEntity">
+        update sys_config set
+          config_value = #{config_value}
+          ,config_name = #{config_name}
+          ,remark = #{remark}
+        where config_id = #{config_id}
+    </update>
+
+    <!--删除信息 -->
+    <update id="delConfig" parameterType="long">
+       delete from sys_config where config_id = #{config_id}
+    </update>
+
+
+</mapper>

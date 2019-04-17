@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springboot.mapper.DictionaryMapper">
+
+    <!-- 字典管理 持久层sql配置 -->
+
+    <!--新增 -->
+    <insert id="addDic" parameterType="com.springboot.entity.DictionaryEntity">
+      insert into sys_dictionary(
+        dic_type,type_name,dic_code,dic_name
+      )values(
+        #{dic_type},#{type_name},#{dic_code},#{dic_name}
+      )
+    </insert>
+
+    <!--查询字典列表 分页 -->
+    <select id="listDic" parameterType="HashMap" resultType="com.springboot.entity.DictionaryEntity">
+        select * from sys_dictionary
+        where 1 = 1
+        <if test="dic_type != null and dic_type != '' ">
+            and dic_type = #{dic_type}
+        </if>
+        <if test="dic_status != null and dic_status != '' ">
+            and dic_status = #{dic_status}
+        </if>
+    </select>
+
+    <!-- 获取字典信息 -->
+    <select id="getDic" resultType="com.springboot.entity.DictionaryEntity">
+        select * from sys_dictionary where dic_type = #{dic_type} and dic_code = #{dic_code}
+    </select>
+
+    <!--更新字典信息 -->
+    <update id="updateDic" parameterType="com.springboot.entity.DictionaryEntity">
+        update sys_dictionary set
+          type_name = #{type_name}
+          ,dic_name = #{dic_name}
+          ,dic_status = #{dic_status}
+        where dic_id = #{dic_id}
+    </update>
+
+    <!--删除字典信息 -->
+    <delete id="delDic" parameterType="long">
+        delete from sys_dictionary where dic_id = #{dic_id}
+    </delete>
+
+    <!-- 批量删除用户 -->
+    <delete id="delBatchDic">
+        delete from sys_dictionary where dic_id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+</mapper>

@@ -1,0 +1,76 @@
+
+<div th:fragment="right">
+    <div class="tit01">
+        <h3>联系我</h3>
+        <div class="gzwm">
+            <ul>
+                <li><a class="xlwb" href="http://jiyouh.yangqq.com/" target="_blank">主页</a></li>
+                <li><a class="txwb" href="tell://18649130945" target="_blank" title="18649130945">QQ</a></li>
+                <li><a class="rss" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=476847113@qq.com" target="_blank">邮箱</a></li>
+                <li><a class="wx" href="">微信</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <!--tit01 end-->
+    <div class="ad"><a href="http://jiyouh.yangqq.com/" target="_blank"><img src="/html/images/4m.jpg" id="slide-img-1"></a></div>
+    <div class="blank"></div>
+
+    <div class="ms-top">
+        <ul class="hd" id="tab">
+            <li class="cur"><a href="javascript:void(0)">点击排行</a></li>
+            <li><a href="javascript:void(0)">站长推荐</a></li>
+        </ul>
+    </div>
+    <div class="ms-main" id="ms-main">
+        <div style="display: block;" class="bd bd-news">
+            <ul>
+                <li th:each="article,status:${hotPage.list}"><a th:href="'/article/detail/' + ${article.article_id} + '.html'" th:title="${article.article_title}" th:text="${article.article_title}"></a></li>
+            </ul>
+        </div>
+        <div class="bd bd-news">
+            <ul>
+                <li th:each="article,status:${suggestPage.list}"><a th:href="'/article/detail/' + ${article.article_id} + '.html'" th:title="${article.article_title}" th:text="${article.article_title}"></a></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+
+        var oLi = document.getElementById("tab").getElementsByTagName("li");
+        var oUl = document.getElementById("ms-main").getElementsByTagName("div");
+        for(var i = 0; i < oLi.length; i++)
+        {
+            oLi[i].index = i;
+            oLi[i].onmouseover = function ()
+            {
+                for(var n = 0; n < oLi.length; n++) oLi[n].className="";
+                this.className = "cur";
+                for(var n = 0; n < oUl.length; n++) oUl[n].style.display = "none";
+                oUl[this.index].style.display = "block"
+            }
+        }
+    </script>
+
+    <div class="blank"></div>
+    <div class="blank"></div>
+    <div class="blank"></div>
+    <!--切换卡 moreSelect end -->
+    <div class="cloud">
+        <h3>标签云</h3>
+        <ul>
+            <a href="javascript:void(0)" target="_blank">JAVA</a>
+            <a href="javascript:void(0)" target="_blank">Springboot</a>
+            <a href="javascript:void(0)" target="_blank">Layui</a>
+            <a href="javascript:void(0)" target="_blank">CSDN</a>
+            <a href="javascript:void(0)" target="_blank">EXCEL</a>
+        </ul>
+    </div>
+
+    <div class="ad"><a href="http://jiyouh.yangqq.com/" target="_blank"><img src="/html/images/4m.jpg" id="slide-img-1"></a></div>
+    <div class="links">
+        <h3>友情链接</h3>
+        <ul>
+            <li th:each="link,status:${linkList}"><a th:href="${link.advert_url}" th:text="${link.advert_name}" target="_blank" ></a></li>
+        </ul>
+    </div>
+</div>

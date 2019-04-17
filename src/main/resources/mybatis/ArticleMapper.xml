@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springboot.mapper.ArticleMapper">
+
+    <!-- 文章管理 持久层sql配置 -->
+
+    <!--新增用户 -->
+    <insert id="addArticle" parameterType="com.springboot.entity.ArticleEntity">
+      insert into t_article(
+        article_title,article_text,article_type,article_desc,article_sign,article_img,article_url,article_author,article_from,article_time
+      )values(
+        #{article_title},#{article_text},#{article_type},#{article_desc},#{article_sign},#{article_img},#{article_url},#{article_author},#{article_from},#{article_time}
+      )
+    </insert>
+
+    <!--查询列表 分页 -->
+    <select id="listArticle" parameterType="HashMap" resultType="com.springboot.entity.ArticleEntity">
+        select * from t_article
+        where 1 = 1
+        <if test="article_title != null and article_title != '' ">
+            and article_title like concat('%',#{article_title},'%')
+        </if>
+        <if test="article_type != null and article_type != '' ">
+            and article_type = #{article_type}
+        </if>
+        <if test="article_status != null and article_status != '' ">
+            and article_status = #{article_status}
+        </if>
+        <if test="article_suggest != null and article_suggest != '' ">
+            and article_suggest = #{article_suggest}
+        </if>
+        order by
+        <if test="article_hot != null and article_hot != '' ">
+            article_cnt desc,
+        </if>
+          article_time desc
+    </select>
+
+    <!-- 获取信息 -->
+    <select id="getArticle" resultType="com.springboot.entity.ArticleEntity">
+        select * from t_article where article_id = #{article_id}
+    </select>
+
+
+    <!--更新用户信息 -->
+    <update id="updateArticle" parameterType="com.springboot.entity.ArticleEntity">
+        update t_article set
+          article_title = #{article_title}
+          ,article_text = #{article_text}
+          ,article_type = #{article_type}
+          ,article_desc = #{article_desc}
+          ,article_sign = #{article_sign}
+          ,article_img = #{article_img}
+          ,article_status = #{article_status}
+          ,article_author = #{article_author}
+          ,article_from = #{article_from}
+          ,article_time = #{article_time}
+          ,article_suggest = #{article_suggest}
+          ,article_cnt = #{article_cnt}
+        where article_id = #{article_id}
+    </update>
+
+    <!--删除信息 -->
+    <update id="delArticle" parameterType="long">
+       delete from t_article where article_id = #{article_id}
+    </update>
+
+    <!-- 批量删除用户 -->
+    <delete id="deleteBatchArticle">
+        delete from t_article where article_id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+</mapper>

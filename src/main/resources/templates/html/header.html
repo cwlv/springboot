@@ -1,0 +1,31 @@
+<header th:fragment="header">
+    <div class="topbg">
+        <ul class="topnav">
+            <a href="/" target="_blank">Home</a><a href="javascript:void(0)" target="_blank">关于我们</a>
+        </ul>
+    </div>
+    <div class="topbgline"></div>
+    <div class="logo">
+        <div class="logo_l f_l"><a href="/"><img src="/html/images/listlogo.png"></a></div>
+        <!--<div class="logo_r f_r">-->
+        <!--<div class="search">-->
+        <!--<form action="http://jiyouh.yangqq.com/e/search/index.php" method="post" name="searchform" id="searchform">-->
+        <!--<input name="keyboard" id="keyboard" class="input_text" value="请输入关键字词" style="color: rgb(153, 153, 153);" onfocus="if(value==&#39;请输入关键字词&#39;){this.style.color=&#39;#000&#39;;value=&#39;&#39;}" onblur="if(value==&#39;&#39;){this.style.color=&#39;#999&#39;;value=&#39;请输入关键字词&#39;}" type="text">-->
+        <!--<input name="show" value="title" type="hidden">-->
+        <!--<input name="tempid" value="1" type="hidden">-->
+        <!--<input name="tbname" value="news" type="hidden">-->
+        <!--<input name="Submit" class="input_submit" value="搜索" type="submit">-->
+        <!--</form>-->
+        <!--</div>-->
+        <!--</div>-->
+
+    </div>
+    <nav id="topnav">
+        <ul>
+            <a href="/" >首页</a>
+            <a th:href="'/article/list/'+ ${menu.dic_code} +'.html'"  th:each="menu,status:${menuList}" th:text="${menu.dic_name}"></a>
+            <a href="javascript:void(0)" target="_blank">关于我们</a>
+        </ul>
+    </nav>
+
+</header>

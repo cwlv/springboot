@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增用户</title>
+    <link rel="stylesheet" href="/admin/css/font.css">
+    <link rel="stylesheet" href="/admin/css/xadmin.css">
+</head>
+
+<body>
+<div class="x-body">
+    <form class="layui-form"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+        <input type="hidden" name="advert_type" class="layui-input" value="10">
+        <div class="layui-form-item">
+            <label class="layui-form-label">参数名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="config_name" placeholder="" lay-verify="required|config_name" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">参数键：</label>
+            <div class="layui-input-block">
+                <input type="text" name="config_key"  lay-verify="required|config_key" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">参数值：</label>
+            <div class="layui-input-block">
+                <input type="text" name="config_value" placeholder="" lay-verify="required|config_value" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述：</label>
+            <div class="layui-input-block">
+                <input type="text" name="remark" placeholder="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="add" id="submitBtn">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="/layui/layui.js" charset="utf-8"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form
+            ,$ = layui.jquery;
+
+        //表单提交
+        form.on('submit(add)', function(data){
+            $("#submitBtn").addClass("layui-btn-disabled");
+            $.ajax({
+                url:"/admin/config/save",              //请求地址
+                type:'post',                         //method请求方式，get或者post
+                data:JSON.stringify(data.field),     //表格数据序列化
+                contentType: "application/json; charset=utf-8",
+                success:function(jsonResult){          //res为相应体,function为回调函数
+                    if(jsonResult.code == '200'){
+                        layer.alert(jsonResult.msg, {icon: 6},function () {
+                            //关闭弹出层，并且刷新父页面
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            parent.location.reload();
+                        });
+                    }else{
+                        layer.alert(jsonResult.msg, {icon: 5});
+                        $("#submitBtn").removeClass("layui-btn-disabled");
+                    }
+                },
+                error:function(){
+                    layer.alert('操作失败！！！',{icon:5});
+                    $("#submitBtn").removeClass("layui-btn-disabled");
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        $(".layui-btn-primary").click(function(){
+            $("#submitBtn").removeClass("layui-btn-disabled");
+        });
+    });
+
+</script>
+</body>
+
+</body>
+</html>
