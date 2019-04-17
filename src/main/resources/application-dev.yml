@@ -1,6 +1,7 @@
 application:
   version: 1.0.0     #版本
   profile: D:/profile/  #文件上传路径
+  fromMail: 279736287@qq.com
 
 server:
   port: 8080
@@ -54,6 +55,18 @@ spring:
   cache:
     type: redis
 
+  mail:
+    host: smtp.qq.com
+    username: 279736287@qq.com
+    password: agfrfcgskyokcafj
+    default-encoding: utf-8
+    properties:
+      mail:
+        stmp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
   thymeleaf:
     cache: false
